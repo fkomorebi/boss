@@ -5,21 +5,6 @@
     </div>
     <el-backtop />
   </div>
-  <template v-if="device === 'mobile'">
-    <el-affix :offset="0">
-      <div class="menu-button-wrap">
-        <el-button
-          v-show="isVisableBackTop"
-          text
-          class="menu-button right"
-          size="large"
-          @click="onBackToTop"
-        >
-          Back to top
-        </el-button>
-      </div>
-    </el-affix>
-  </template>
 </template>
 
 <script setup>

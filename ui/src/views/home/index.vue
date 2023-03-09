@@ -1,8 +1,5 @@
 <template>
   <search :on-search="onSearch" />
-  <el-button type="primary" @click="createDialogVisable = true">新建</el-button>
-  <el-button type="warning" @click="onRecoverUserInfo">撤销</el-button>
-  <el-button type="danger" @click="handleDelete">批量删除</el-button>
   <userInfoPop
     :on-submit="onCreateUserInfo"
     :dialog-visible="createDialogVisable"
@@ -22,6 +19,9 @@
       }
     "
   />
+  <el-button type="primary" @click="createDialogVisable = true">新建</el-button>
+  <el-button type="warning" @click="onRecoverUserInfo">撤销</el-button>
+  <el-button type="danger" @click="handleDelete">批量删除</el-button>
   <el-table
     :data="userInfos"
     class="user-table"
@@ -199,7 +199,6 @@ function onSearch(formInline) {
   searchParmas = formInline
   searchParmas.pageSize = pageSize.value
   searchParmas.pageIndex = pageIndex.value
-  console.log(formInline)
   service({
     method: 'get',
     url: '/api/user/list',
