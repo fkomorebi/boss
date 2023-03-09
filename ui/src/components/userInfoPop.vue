@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    v-model="dialogVisible"
+    v-model="visable"
     title="新建/编辑用户"
     width="40%"
     :before-close="handleClose"
@@ -54,6 +54,7 @@ const props = defineProps({
   oncancel: {type: Function},
   defaultData: {type: Object},
 })
+const visable = computed(() => props.dialogVisible)
 const formInline = reactive({})
 // 检测值是否发生改变
 onBeforeUpdate(() => {
