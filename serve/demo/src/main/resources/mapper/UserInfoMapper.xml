@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.UserInfoMapper">
+    
+    <resultMap type="UserInfo" id="UserInfoRes">
+    	<id     property="id"      column="id"      />
+        <result property="name"    column="name"    />
+        <result property="age" column="age" />
+        <result property="sex"     column="sex"     />
+        <result property="phone"   column="phone"   />
+        <result property="address"    column="address"    />
+    </resultMap>
+    
+    <sql id="selectUserInfoVo">
+        select id, name, sex, phone, address, age
+		from user_info
+    </sql>
+    <select id="selectUserInfoList" resultMap="UserInfoRes">
+        <include refid="selectUserInfoVo"/>
+        <where>
+        del_flag != 0
+
+            <if test="userInfo.id != null and userInfo.id != ''">
+                AND id like concat('%', #{userInfo.id}, '%')
+            </if>
+			<if test="userInfo.name != null and userInfo.name != ''">
+				AND name like concat('%', #{userInfo.name}, '%')
+			</if>
+			<if test="userInfo.sex != null and userInfo.sex != ''">
+				AND sex = #{userInfo.sex}
+			</if>
+			<if test="userInfo.address != null and userInfo.address != ''">
+				AND address like concat('%', #{userInfo.address}, '%')
+			</if>
+            <if test="userInfo.age != null">
+                AND age = #{userInfo.age}
+            </if>
+      <if test="userInfo.phone != null and userInfo.phone != ''">
+        AND phone like concat('%', #{userInfo.phone}, '%')
+      </if>
+		</where>
+		ORDER BY id DESC
+		LIMIT #{pageIndex}, #{pageSize}
+    </select>
+
+    <select id="selectUserInfoCount" resultType="Long">
+        select count(id) from user_info
+        <where>
+            del_flag != 0
+
+            <if test="userInfo.id != null and userInfo.id != ''">
+                AND id like concat('%', #{userInfo.id}, '%')
+            </if>
+            <if test="userInfo.name != null and userInfo.name != ''">
+                AND name like concat('%', #{userInfo.name}, '%')
+            </if>
+            <if test="userInfo.sex != null and userInfo.sex != ''">
+                AND sex = #{userInfo.sex}
+            </if>
+            <if test="userInfo.address != null and userInfo.address != ''">
+                AND address like concat('%', #{userInfo.address}, '%')
+            </if>
+            <if test="userInfo.age != null">
+                AND age = #{userInfo.age}
+            </if>
+            <if test="userInfo.phone != null and userInfo.phone != ''">
+                AND phone like concat('%', #{userInfo.phone}, '%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertUserInfo" parameterType="UserInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into user_info (
+			<if test="name != null and name != '' ">name,</if>
+			<if test="sex != null and sex != '' ">sex,</if>
+			<if test="age != null and age != '' ">age,</if>
+			<if test="address != null and address != '' ">address,</if>
+			<if test="phone != null and phone != ''">phone,</if>
+            del_flag
+        )values(
+			<if test="name != null and name != '' ">#{name},</if>
+			<if test="sex != null and sex != '' ">#{sex},</if>
+			<if test="age != null and age != '' ">#{age},</if>
+			<if test="address != null and address != '' ">#{address},</if>
+			<if test="phone != null and phone != ''">#{phone},</if>
+            1
+		)
+    </insert>
+	 
+    <update id="updateUserInfo" parameterType="UserInfo">
+        update user_info 
+        <set>
+			<if test="name != null and name != '' ">name=#{name},</if>
+			<if test="sex != null and sex != '' ">sex=#{sex},</if>
+			<if test="age != null and age != '' ">age=#{age},</if>
+			<if test="address != null and address != '' ">address=#{address},</if>
+			<if test="phone != null and phone != ''">phone=#{phone},</if>
+        </set>
+        where id = #{id}
+    </update>
+	
+    <update id="deleteUserInfoById" parameterType="Long">
+        update user_info set del_flag=0 where id = #{id}
+    </update>
+    
+    <update id="deleteUserInfoByIds" parameterType="Long">
+        update user_info set del_flag=0 where
+        <foreach item="id" collection="array" separator="or">
+        	id=#{id}
+        </foreach>
+    </update>
+
+
+    <update id="recoverUserInfo" parameterType="Long">
+        update user_info set del_flag=1 where
+        <foreach item="id" collection="array" separator="or">
+            id=#{id}
+        </foreach>
+    </update>
+    
+</mapper>
